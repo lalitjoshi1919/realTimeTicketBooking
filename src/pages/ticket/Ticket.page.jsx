@@ -5,10 +5,21 @@ import { PageBreadcrumb } from "../../components/breadcrumb/Breadcrumb.comp";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Tickets from "../../assests/data/dummy-tickets.json";
 import { UpdateTicket } from "../../components/update-ticket/UpdateTicket.comp";
+import { useParams } from "react-router-dom";
 
-const ticket = Tickets[0];
 export const Ticket = () => {
+  const { tId } = useParams();
   const [msg, setMsg] = useState("");
+  const [ticket, setTicket] = useState("");
+
+  useEffect(() => {
+    for (let i = 0; i < Tickets.length; i++) {
+      if (Tickets[i].id == tId) {
+        setTicket(Tickets[i]);
+        continue;
+      }
+    }
+  }, [tId]);
 
   const handleOnChange = (e) => {
     const { value } = e.target;
@@ -27,6 +38,7 @@ export const Ticket = () => {
       </Row>
       <Row>
         <Col className="text-weight-bolder text-secondary">
+          {tId}
           <div className="subject">Subject: {ticket.subject}</div>
           <div className="status">Status: {ticket.status}</div>
           <div className="date">Ticket opened: {ticket.addedAt} </div>
@@ -41,7 +53,9 @@ export const Ticket = () => {
 
       <Row>
         <Col>
-          <MessageHistory msg={ticket.history}></MessageHistory>
+          {ticket.history && (
+            <MessageHistory msg={ticket.history}></MessageHistory>
+          )}
         </Col>
       </Row>
       <Row>
